@@ -3,9 +3,12 @@ param(
     [string]$OutputMsi = "$(Split-Path -Parent $PSScriptRoot)\MandateMindAgentSetup.msi"
 )
 
-$wixBin = "$PSScriptRoot\wix"
-$candle = Join-Path $wixBin "candle.exe"
-$light  = Join-Path $wixBin "light.exe"
+# Use system-installed WiX Toolset
+$wixPath = "C:\Program Files (x86)\WiX Toolset v3.14\bin"
+
+$candle = Join-Path $wixPath "candle.exe"
+$light  = Join-Path $wixPath "light.exe"
+$heat   = Join-Path $wixPath "heat.exe"
 
 Write-Host "[MandateMind] Building Windows MSI..."
 
