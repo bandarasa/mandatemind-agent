@@ -21,7 +21,7 @@
 
           <!-- Agent executable -->
           <Component Id="AgentExe" Guid="b2344560-bac5-4655-ae1b-2d396de2d114">
-            <File Id="AgentExeFile" Source="mm_agent_main.exe" KeyPath="yes" />
+            <File Id="AgentExeFile" Source="dist\\mm_agent_main.exe" KeyPath="yes" />
 
             <!-- Windows service -->
             <ServiceInstall
@@ -52,7 +52,7 @@
 
           <Directory Id="ConfigDir" Name="Config">
             <Component Id="ConfigComponent" Guid="60f5913f-ca2c-4d5a-9990-0dfc0301bdcd">
-              <File Id="AgentConfigFile" Source="config\\agent.conf" KeyPath="yes" />
+              <File Id="AgentConfigFile" Source="config.example.yaml" KeyPath="yes" />
             </Component>
           </Directory>
 
