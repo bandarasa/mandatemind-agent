@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wix">
+  <Fragment>
+    <Property Id="SITE_ID" />
+    <Property Id="API_KEY" />
+    <Property Id="INSTALLDIR" Value="C:\Program Files\MandateMind Agent\" />
+  </Fragment>
+</Wix>

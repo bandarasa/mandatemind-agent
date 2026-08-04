@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wix">
+  <Product
+    Id="*"
+    Name="MandateMind Agent"
+    Language="1033"
+    Version="1.0.0.0"
+    Manufacturer="MandateMind"
+    UpgradeCode="PUT-UPGRADE-GUID-HERE">
+
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
+
+    <Property Id="SITE_ID" />
+    <Property Id="API_KEY" />
+    <Property Id="INSTALLDIR" Value="C:\Program Files\MandateMind Agent\" />
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLDIR" Name="MandateMind Agent">
+          <Component Id="AgentExe" Guid="PUT-GUID-HERE">
+            <File Id="mandatemind_agent_exe" Source="mm_agent_main.exe" KeyPath="yes" />
+          </Component>
+        </Directory>
+      </Directory>
+
+      <Directory Id="CommonAppDataFolder">
+        <Directory Id="MandateMindDataRoot" Name="MandateMind">
+          <Directory Id="ConfigDir" Name="Config">
+            <Component Id="ConfigComponent" Guid="PUT-GUID-HERE">
+              <File Id="agent_conf" Source="config\\agent.conf" KeyPath="yes" />
+            </Component>
+          </Directory>
+          <Directory Id="DataDir" Name="Data">
+            <Component Id="DataComponent" Guid="PUT-GUID-HERE">
+              <CreateFolder />
+            </Component>
+          </Directory>
+          <Directory Id="LogsDir" Name="Logs">
+            <Component Id="LogsComponent" Guid="PUT-GUID-HERE">
+              <CreateFolder />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="Complete" Title="MandateMind Agent" Level="1">
+      <ComponentRef Id="AgentExe" />
+      <ComponentRef Id="ConfigComponent" />
+      <ComponentRef Id="DataComponent" />
+      <ComponentRef Id="LogsComponent" />
+    </Feature>
+
+    <ServiceInstall
+      Id="MandateMindAgentService"
+      Type="ownProcess"
+      Name="MandateMindAgent"
+      DisplayName="MandateMind Agent"
+      Description="MandateMind telemetry and compliance agent"
+      Start="auto"
+      ErrorControl="normal"
+      Arguments="--service"
+      Account="LocalSystem" />
+
+    <ServiceControl
+      Id="MandateMindAgentServiceControl"
+      Name="MandateMindAgent"
+      Start="install"
+      Stop="both"
+      Remove="uninstall"
+      Wait="yes" />
+
+  </Product>
+</Wix>

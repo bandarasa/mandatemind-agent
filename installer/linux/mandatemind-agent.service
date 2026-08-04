@@ -1,0 +1,15 @@
+[Unit]
+Description=MandateMind Agent
+After=network.target
+
+[Service]
+Type=simple
+User=mandatemind
+Group=mandatemind
+WorkingDirectory=/opt/mandatemind-agent
+ExecStart=/usr/bin/env python3 -m mm_agent.main
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

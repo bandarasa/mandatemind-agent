@@ -1,0 +1,53 @@
+# ================================
+# MandateMind Agent Configuration
+# ================================
+
+tenant_id: "YOUR_TENANT_ID"
+agent_id: "agent-001"
+
+api_base_url: "https://api.mandatemind.com"
+api_token: "YOUR_AGENT_API_TOKEN"
+
+# -------------------------------
+# Scheduling (cron format)
+# -------------------------------
+schedule:
+  ad: "0 2 * * *"                # daily at 2am
+  gpo: "0 2 * * *"
+  firewall_palo_alto: "0 3 * * *"
+  firewall_fortinet: "0 3 * * *"
+  endpoint_intune: "0 */6 * * *" # every 6 hours
+
+# -------------------------------
+# Collector configurations
+# -------------------------------
+collectors:
+
+  ad:
+    enabled: true
+    server: "ldap://dc01.example.local"
+    bind_dn: "CN=MMAgent,OU=ServiceAccounts,DC=example,DC=local"
+    bind_password: "REPLACE_ME"
+    search_base: "DC=example,DC=local"
+
+  gpo:
+    enabled: true
+    domain: "example.local"
+
+  firewall_palo_alto:
+    enabled: false
+    host: "192.168.1.1"
+    username: "readonly"
+    password: "REPLACE_ME"
+
+  firewall_fortinet:
+    enabled: false
+    host: "192.168.1.2"
+    username: "readonly"
+    password: "REPLACE_ME"
+
+  endpoint_intune:
+    enabled: false
+    tenant_id: "YOUR_AZURE_TENANT_ID"
+    client_id: "YOUR_APP_CLIENT_ID"
+    client_secret: "YOUR_APP_SECRET"
