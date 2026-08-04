@@ -49,7 +49,7 @@ jobs:
 
       - name: Build Windows MSI
         run: |
-          mkdir dist
+          if (!(Test-Path dist)) { mkdir dist }
           powershell -File installer/windows/build_msi.ps1
           copy installer/MandateMindAgentSetup.msi dist/
 
