@@ -6,12 +6,10 @@
     Language="1033"
     Version="1.0.0.0"
     Manufacturer="MandateMind"
-    UpgradeCode="PUT-UPGRADE-GUID-HERE">
+    UpgradeCode="743c5593-efd4-48c4-ba15-a9ea06671825"
 
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
 
-    <Property Id="SITE_ID" />
-    <Property Id="API_KEY" />
     <Property Id="INSTALLDIR" Value="C:\Program Files\MandateMind Agent\" />
 
     <Directory Id="TARGETDIR" Name="SourceDir">
