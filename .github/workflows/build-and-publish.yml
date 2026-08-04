@@ -40,7 +40,7 @@ jobs:
       - name: Build Windows MSI
         run: |
           mkdir dist
-          powershell -File installer/build.ps1
+          powershell -File installer/windows/build_msi.ps1
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -50,8 +50,9 @@ jobs:
           aws-region: us-east-1
 
       - name: Upload Windows artifact to S3
-        run: |
-          aws s3 sync dist/ s3://mandatemind-downloads/agent/latest/
+      run: |
+        aws s3 sync dist/ s3://mandatemind-downloads/agent/latest/
+
 
   invalidate:
     runs-on: ubuntu-latest
