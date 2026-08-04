@@ -21,7 +21,7 @@
 
           <!-- Agent executable -->
           <Component Id="AgentExe" Guid="b2344560-bac5-4655-ae1b-2d396de2d114">
-            <File Id="AgentExeFile" Source="dist\\mm_agent_main.exe" KeyPath="yes" />
+            <File Id="AgentExeFile" Source="dist\\mandatemind-agent.exe" KeyPath="yes" />
 
             <!-- Windows service -->
             <ServiceInstall
