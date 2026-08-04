@@ -37,9 +37,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install WiX Toolset
-        run: |
-          choco install wixtoolset --version=3.11.2 -y
 
       - name: Build Windows MSI
         run: |
