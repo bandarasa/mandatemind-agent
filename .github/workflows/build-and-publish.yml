@@ -6,28 +6,40 @@ on:
       - main
 
 jobs:
-  build:
+  build-linux:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      # REMOVE requirements.txt step — it does not exist
-
       - name: Build Linux agent
         run: |
           mkdir -p dist/linux
           tar -czvf dist/linux/mandatemind-agent-linux-x64.tar.gz mm_agent/
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Upload Linux artifact to S3
+        run: |
+          aws s3 sync dist/linux/ s3://mandatemind-downloads/agent/latest/
+
+  build-windows:
+    runs-on: windows-latest
+    needs: build-linux
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Build Windows MSI
         run: |
-          mkdir -p dist/windows
+          mkdir dist
           powershell -File installer/build.ps1
 
       - name: Configure AWS credentials
@@ -37,9 +49,21 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Upload to S3
+      - name: Upload Windows artifact to S3
         run: |
           aws s3 sync dist/ s3://mandatemind-downloads/agent/latest/
+
+  invalidate:
+    runs-on: ubuntu-latest
+    needs: build-windows
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
 
       - name: Invalidate CloudFront
         uses: chetan/invalidate-cloudfront-action@v2
