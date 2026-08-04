@@ -67,7 +67,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Invalidate CloudFront
-        uses: chetan/invalidate-cloudfront-action@v1
-        with:
-          distribution: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-          paths: "/*"
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
