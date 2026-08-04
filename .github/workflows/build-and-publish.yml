@@ -45,7 +45,7 @@ jobs:
       - name: Build agent EXE
         run: |
           pip install pyinstaller
-          pyinstaller --onefile mm_agent/main.py --name mm_agent_main
+          pyinstaller --onefile mm_agent/main.py --name mandatemind-agent
 
       - name: Build Windows MSI
         run: |
