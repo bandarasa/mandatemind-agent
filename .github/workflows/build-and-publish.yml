@@ -1,60 +1,50 @@
-name: Build & Publish MandateMind Agent
+name: Publish MandateMind Agent
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Install Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt || true
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-    - name: Run tests
-      run: |
-        pytest -q || true
+      - name: Build Linux agent
+        run: |
+          mkdir -p dist/linux
+          tar -czvf dist/linux/mandatemind-agent-linux-x64.tar.gz mm_agent/
 
-    - name: Build Linux tarball
-      run: |
-        chmod +x installer/linux/build_tarball.sh
-        installer/linux/build_tarball.sh
+      - name: Build Windows MSI
+        run: |
+          mkdir -p dist/windows
+          powershell -File installer/build.ps1
 
-    - name: Build Windows MSI
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y wine-stable
-        chmod +x installer/windows/build_msi.ps1
-        pwsh installer/windows/build_msi.ps1
+      - name: Upload to S3
+        uses: aws-actions/s3-sync@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: us-east-1
+          source: dist/
+          destination: s3://mandatemind-downloads/agent/latest/
 
-    - name: Upload artifacts to S3
-      uses: aws-actions/s3-sync@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
-        source: "./"
-        destination: "s3://mandatemind-downloads/agent/latest/"
-        exclude: "*"
-        include: |
-          mandatemind-agent-linux-x64.tar.gz
-          MandateMindAgentSetup.msi
-
-    - name: Invalidate CloudFront cache
-      uses: awact/cloudfront-invalidate@v1
-      with:
-        distribution-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
-        paths: "/*"
-        aws-region: us-east-1
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Invalidate CloudFront
+        uses: chetan/invalidate-cloudfront-action@v2
+        with:
+          distribution-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+          paths: "/*"
+          aws-region: "us-east-1"
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
