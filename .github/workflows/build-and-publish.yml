@@ -37,6 +37,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Build agent EXE
+        run: |
+          pip install pyinstaller
+          pyinstaller --onefile mm_agent/main.py --name mm_agent_main
 
       - name: Build Windows MSI
         run: |
