@@ -42,6 +42,7 @@ jobs:
         run: |
           mkdir dist
           powershell -File installer/windows/build_msi.ps1
+          copy installer/MandateMindAgentSetup.msi dist/
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
