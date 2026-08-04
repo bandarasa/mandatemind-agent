@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
   <Product
     Id="*"
     Name="MandateMind Agent"
@@ -13,33 +14,62 @@
     <Property Id="INSTALLDIR" Value="C:\Program Files\MandateMind Agent\" />
 
     <Directory Id="TARGETDIR" Name="SourceDir">
+
       <Directory Id="ProgramFilesFolder">
         <Directory Id="INSTALLDIR" Name="MandateMind Agent">
-          <Component Id="AgentExe" Guid="PUT-GUID-HERE">
-            <File Id="mandatemind_agent_exe" Source="mm_agent_main.exe" KeyPath="yes" />
+
+          <!-- Agent executable -->
+          <Component Id="AgentExe" Guid="b2344560-bac5-4655-ae1b-2d396de2d114">
+            <File Id="AgentExeFile" Source="mm_agent_main.exe" KeyPath="yes" />
+
+            <!-- Windows service -->
+            <ServiceInstall
+              Id="MandateMindAgentService"
+              Type="ownProcess"
+              Name="MandateMindAgent"
+              DisplayName="MandateMind Agent"
+              Description="MandateMind telemetry and compliance agent"
+              Start="auto"
+              ErrorControl="normal"
+              Arguments="--service"
+              Account="LocalSystem" />
+
+            <ServiceControl
+              Id="MandateMindAgentServiceControl"
+              Name="MandateMindAgent"
+              Start="install"
+              Stop="both"
+              Remove="uninstall"
+              Wait="yes" />
           </Component>
+
         </Directory>
       </Directory>
 
       <Directory Id="CommonAppDataFolder">
         <Directory Id="MandateMindDataRoot" Name="MandateMind">
+
           <Directory Id="ConfigDir" Name="Config">
-            <Component Id="ConfigComponent" Guid="PUT-GUID-HERE">
-              <File Id="agent_conf" Source="config\\agent.conf" KeyPath="yes" />
+            <Component Id="ConfigComponent" Guid="60f5913f-ca2c-4d5a-9990-0dfc0301bdcd">
+              <File Id="AgentConfigFile" Source="config\\agent.conf" KeyPath="yes" />
             </Component>
           </Directory>
+
           <Directory Id="DataDir" Name="Data">
-            <Component Id="DataComponent" Guid="PUT-GUID-HERE">
+            <Component Id="DataComponent" Guid="bbdcb678-7c71-446a-982b-90fb70f64d2c">
               <CreateFolder />
             </Component>
           </Directory>
+
           <Directory Id="LogsDir" Name="Logs">
-            <Component Id="LogsComponent" Guid="PUT-GUID-HERE">
+            <Component Id="LogsComponent" Guid="2e231be4-02f9-428e-8392-54697a329b55">
               <CreateFolder />
             </Component>
           </Directory>
+
         </Directory>
       </Directory>
+
     </Directory>
 
     <Feature Id="Complete" Title="MandateMind Agent" Level="1">
@@ -49,24 +79,6 @@
       <ComponentRef Id="LogsComponent" />
     </Feature>
 
-    <ServiceInstall
-      Id="MandateMindAgentService"
-      Type="ownProcess"
-      Name="MandateMindAgent"
-      DisplayName="MandateMind Agent"
-      Description="MandateMind telemetry and compliance agent"
-      Start="auto"
-      ErrorControl="normal"
-      Arguments="--service"
-      Account="LocalSystem" />
-
-    <ServiceControl
-      Id="MandateMindAgentServiceControl"
-      Name="MandateMindAgent"
-      Start="install"
-      Stop="both"
-      Remove="uninstall"
-      Wait="yes" />
-
   </Product>
+
 </Wix>
