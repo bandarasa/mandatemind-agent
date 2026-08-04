@@ -6,7 +6,7 @@
     Language="1033"
     Version="1.0.0.0"
     Manufacturer="MandateMind"
-    UpgradeCode="743c5593-efd4-48c4-ba15-a9ea06671825"
+    UpgradeCode="743c5593-efd4-48c4-ba15-a9ea06671825">
 
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
 
