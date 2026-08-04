@@ -18,8 +18,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      # REMOVE requirements.txt step — it does not exist
 
       - name: Build Linux agent
         run: |
